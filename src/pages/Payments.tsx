@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,7 +6,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import DashboardLayout from "@/components/DashboardLayout";
-import { Calendar, CreditCard, DollarSign, Download, FileText, Search, User, Wallet } from "lucide-react";
+import { Calendar, CreditCard, DollarSign, Download, FileText, Search, User, Wallet, X } from "lucide-react";
 
 interface PaymentMethod {
   id: string;
@@ -287,88 +286,241 @@ const Payments = () => {
                 <TabsTrigger value="upi">UPI</TabsTrigger>
                 <TabsTrigger value="bank">Bank Account</TabsTrigger>
               </TabsList>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                {paymentMethods.map(method => (
-                  <div 
-                    key={method.id} 
-                    className={`rounded-lg border p-4 relative ${
-                      method.default ? "border-primary" : ""
-                    }`}
-                  >
-                    {method.default && (
-                      <span className="absolute top-2 right-2 bg-primary text-white text-xs px-1.5 py-0.5 rounded-full">
-                        Default
-                      </span>
-                    )}
-                    <div className="flex flex-col items-center space-y-2 pt-3">
-                      <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center">
-                        {method.type === "card" ? (
-                          <CreditCard className="h-5 w-5 text-slate-600" />
-                        ) : method.type === "upi" ? (
-                          <Wallet className="h-5 w-5 text-slate-600" />
-                        ) : (
-                          <DollarSign className="h-5 w-5 text-slate-600" />
-                        )}
-                      </div>
-                      <h3 className="font-medium text-sm">{method.name}</h3>
-                      <p className="text-xs text-muted-foreground">{method.details}</p>
-                      <div className="flex gap-2 mt-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="text-xs h-7"
-                          onClick={() => {
-                            const updatedMethods = paymentMethods.map(m => ({
-                              ...m,
-                              default: m.id === method.id
-                            }));
-                            setPaymentMethods(updatedMethods);
-                            toast({
-                              title: "Default payment method updated",
-                              description: `${method.name} is now your default payment method.`
-                            });
-                          }}
-                          disabled={method.default}
-                        >
-                          Set Default
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="text-xs h-7 text-red-500 hover:text-red-600"
-                          onClick={() => {
-                            setPaymentMethods(paymentMethods.filter(m => m.id !== method.id));
-                            toast({
-                              title: "Payment method removed",
-                              description: `${method.name} has been removed from your account.`
-                            });
-                          }}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
+              <TabsContent value="all">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  {paymentMethods.map(method => (
+                    <div 
+                      key={method.id} 
+                      className={`rounded-lg border p-4 relative ${
+                        method.default ? "border-primary" : ""
+                      }`}
+                    >
+                      {method.default && (
+                        <span className="absolute top-2 right-2 bg-primary text-white text-xs px-1.5 py-0.5 rounded-full">
+                          Default
+                        </span>
+                      )}
+                      <div className="flex flex-col items-center space-y-2 pt-3">
+                        <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center">
+                          {method.type === "card" ? (
+                            <CreditCard className="h-5 w-5 text-slate-600" />
+                          ) : method.type === "upi" ? (
+                            <Wallet className="h-5 w-5 text-slate-600" />
+                          ) : (
+                            <DollarSign className="h-5 w-5 text-slate-600" />
+                          )}
+                        </div>
+                        <h3 className="font-medium text-sm">{method.name}</h3>
+                        <p className="text-xs text-muted-foreground">{method.details}</p>
+                        <div className="flex gap-2 mt-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-xs h-7"
+                            onClick={() => {
+                              const updatedMethods = paymentMethods.map(m => ({
+                                ...m,
+                                default: m.id === method.id
+                              }));
+                              setPaymentMethods(updatedMethods);
+                              toast({
+                                title: "Default payment method updated",
+                                description: `${method.name} is now your default payment method.`
+                              });
+                            }}
+                            disabled={method.default}
+                          >
+                            Set Default
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-xs h-7 text-red-500 hover:text-red-600"
+                            onClick={() => {
+                              setPaymentMethods(paymentMethods.filter(m => m.id !== method.id));
+                              toast({
+                                title: "Payment method removed",
+                                description: `${method.name} has been removed from your account.`
+                              });
+                            }}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-                <Button 
-                  variant="outline" 
-                  className="h-auto py-8 flex flex-col items-center justify-center rounded-lg border border-dashed"
-                  onClick={() => {
-                    toast({
-                      title: "Add payment method",
-                      description: "This functionality will be available soon."
-                    });
-                  }}
-                >
-                  <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center mb-2">
-                    <CreditCard className="h-5 w-5 text-slate-600" />
-                  </div>
-                  <span className="font-medium text-sm">Add new</span>
-                  <span className="text-xs text-muted-foreground mt-1">Card, UPI, or Bank</span>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+                  ))}
+                  <Button 
+                    variant="outline" 
+                    className="h-auto py-8 flex flex-col items-center justify-center rounded-lg border border-dashed"
+                    onClick={() => {
+                      toast({
+                        title: "Add payment method",
+                        description: "This functionality will be available soon."
+                      });
+                    }}
+                  >
+                    <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center mb-2">
+                      <CreditCard className="h-5 w-5 text-slate-600" />
+                    </div>
+                    <span className="font-medium text-sm">Add new</span>
+                    <span className="text-xs text-muted-foreground mt-1">Card, UPI, or Bank</span>
+                  </Button>
+                </div>
+              </TabsContent>
+              <TabsContent value="cards">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  {paymentMethods.filter(m => m.type === "card").map(method => (
+                    <div key={method.id} className={`rounded-lg border p-4 relative ${method.default ? "border-primary" : ""}`}>
+                      <div className="flex flex-col items-center space-y-2 pt-3">
+                        <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center">
+                          <CreditCard className="h-5 w-5 text-slate-600" />
+                        </div>
+                        <h3 className="font-medium text-sm">{method.name}</h3>
+                        <p className="text-xs text-muted-foreground">{method.details}</p>
+                        <div className="flex gap-2 mt-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-xs h-7"
+                            onClick={() => {
+                              const updatedMethods = paymentMethods.map(m => ({
+                                ...m,
+                                default: m.id === method.id
+                              }));
+                              setPaymentMethods(updatedMethods);
+                              toast({
+                                title: "Default payment method updated",
+                                description: `${method.name} is now your default payment method.`
+                              });
+                            }}
+                            disabled={method.default}
+                          >
+                            Set Default
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-xs h-7 text-red-500 hover:text-red-600"
+                            onClick={() => {
+                              setPaymentMethods(paymentMethods.filter(m => m.id !== method.id));
+                              toast({
+                                title: "Payment method removed",
+                                description: `${method.name} has been removed from your account.`
+                              });
+                            }}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+              <TabsContent value="upi">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  {paymentMethods.filter(m => m.type === "upi").map(method => (
+                    <div key={method.id} className={`rounded-lg border p-4 relative ${method.default ? "border-primary" : ""}`}>
+                      <div className="flex flex-col items-center space-y-2 pt-3">
+                        <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center">
+                          <Wallet className="h-5 w-5 text-slate-600" />
+                        </div>
+                        <h3 className="font-medium text-sm">{method.name}</h3>
+                        <p className="text-xs text-muted-foreground">{method.details}</p>
+                        <div className="flex gap-2 mt-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-xs h-7"
+                            onClick={() => {
+                              const updatedMethods = paymentMethods.map(m => ({
+                                ...m,
+                                default: m.id === method.id
+                              }));
+                              setPaymentMethods(updatedMethods);
+                              toast({
+                                title: "Default payment method updated",
+                                description: `${method.name} is now your default payment method.`
+                              });
+                            }}
+                            disabled={method.default}
+                          >
+                            Set Default
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-xs h-7 text-red-500 hover:text-red-600"
+                            onClick={() => {
+                              setPaymentMethods(paymentMethods.filter(m => m.id !== method.id));
+                              toast({
+                                title: "Payment method removed",
+                                description: `${method.name} has been removed from your account.`
+                              });
+                            }}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+              <TabsContent value="bank">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  {paymentMethods.filter(m => m.type === "bank").map(method => (
+                    <div key={method.id} className={`rounded-lg border p-4 relative ${method.default ? "border-primary" : ""}`}>
+                      <div className="flex flex-col items-center space-y-2 pt-3">
+                        <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center">
+                          <DollarSign className="h-5 w-5 text-slate-600" />
+                        </div>
+                        <h3 className="font-medium text-sm">{method.name}</h3>
+                        <p className="text-xs text-muted-foreground">{method.details}</p>
+                        <div className="flex gap-2 mt-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-xs h-7"
+                            onClick={() => {
+                              const updatedMethods = paymentMethods.map(m => ({
+                                ...m,
+                                default: m.id === method.id
+                              }));
+                              setPaymentMethods(updatedMethods);
+                              toast({
+                                title: "Default payment method updated",
+                                description: `${method.name} is now your default payment method.`
+                              });
+                            }}
+                            disabled={method.default}
+                          >
+                            Set Default
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-xs h-7 text-red-500 hover:text-red-600"
+                            onClick={() => {
+                              setPaymentMethods(paymentMethods.filter(m => m.id !== method.id));
+                              toast({
+                                title: "Payment method removed",
+                                description: `${method.name} has been removed from your account.`
+                              });
+                            }}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
 
         {/* Payment history */}
         <Card>
