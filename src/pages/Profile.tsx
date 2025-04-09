@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 
 const Profile = () => {
-  const { user, updateUser } = useAuth();
+  const { user, updateProfile } = useAuth();
   const { toast } = useToast();
   const [name, setName] = useState(user?.name || "");
   const [email, setEmail] = useState(user?.email || "");
@@ -19,8 +19,8 @@ const Profile = () => {
   };
 
   const handleSave = () => {
-    if (updateUser) {
-      updateUser({ ...user, name, email });
+    if (updateProfile) {
+      updateProfile({ ...user, name, email });
       toast({
         title: "Profile updated",
         description: "Your profile information has been updated successfully.",
