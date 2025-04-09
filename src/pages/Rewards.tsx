@@ -3,7 +3,6 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
-import DashboardLayout from "@/components/DashboardLayout";
 import { useToast } from "@/hooks/use-toast";
 import { Calendar, Check, Gift, History, Medal, Phone, Smartphone, Users, Wifi } from "lucide-react";
 
@@ -204,517 +203,515 @@ const Rewards = () => {
   };
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Rewards & Loyalty</h1>
-          <p className="text-muted-foreground">
-            Earn and redeem points for exclusive rewards and benefits
-          </p>
-        </div>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">Rewards & Loyalty</h1>
+        <p className="text-muted-foreground">
+          Earn and redeem points for exclusive rewards and benefits
+        </p>
+      </div>
 
-        {/* Loyalty status card */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="md:col-span-2 bg-gradient-to-br from-primary/5 to-primary/10 overflow-hidden relative">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Medal className="h-5 w-5 text-primary" />
-                Loyalty Status
-              </CardTitle>
-              <CardDescription>Your current tier and benefits</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="flex flex-col justify-center col-span-1">
-                  <div className="rounded-full w-28 h-28 mx-auto flex items-center justify-center bg-white border-4 border-primary/20 mb-4">
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-primary">{userPoints}</div>
-                      <div className="text-xs text-muted-foreground">POINTS</div>
-                    </div>
-                  </div>
+      {/* Loyalty status card */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="md:col-span-2 bg-gradient-to-br from-primary/5 to-primary/10 overflow-hidden relative">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Medal className="h-5 w-5 text-primary" />
+              Loyalty Status
+            </CardTitle>
+            <CardDescription>Your current tier and benefits</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="flex flex-col justify-center col-span-1">
+                <div className="rounded-full w-28 h-28 mx-auto flex items-center justify-center bg-white border-4 border-primary/20 mb-4">
                   <div className="text-center">
-                    <h3 className="text-lg font-bold">{getTier(userPoints)} Tier</h3>
-                    <p className="text-sm text-muted-foreground">Member since Jan 2023</p>
+                    <div className="text-3xl font-bold text-primary">{userPoints}</div>
+                    <div className="text-xs text-muted-foreground">POINTS</div>
                   </div>
                 </div>
-                
-                <div className="md:col-span-2 space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <div className="space-y-1">
-                        <span className="text-sm font-medium">
-                          {getTier(userPoints) === "Bronze" ? "Silver Tier" : 
-                           getTier(userPoints) === "Silver" ? "Gold Tier" : 
-                           getTier(userPoints) === "Gold" ? "Platinum Tier" : "Max Tier"}
-                        </span>
-                        {getTier(userPoints) !== "Platinum" && (
-                          <div className="text-xs text-muted-foreground">
-                            {getTier(userPoints) === "Bronze" ? (500 - userPoints) : 
-                             getTier(userPoints) === "Silver" ? (1000 - userPoints) : 
-                             (2000 - userPoints)} points needed
-                          </div>
-                        )}
-                      </div>
+                <div className="text-center">
+                  <h3 className="text-lg font-bold">{getTier(userPoints)} Tier</h3>
+                  <p className="text-sm text-muted-foreground">Member since Jan 2023</p>
+                </div>
+              </div>
+              
+              <div className="md:col-span-2 space-y-4">
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <div className="space-y-1">
                       <span className="text-sm font-medium">
-                        {userPoints}/{getTier(userPoints) === "Bronze" ? "500" : 
+                        {getTier(userPoints) === "Bronze" ? "Silver Tier" : 
+                         getTier(userPoints) === "Silver" ? "Gold Tier" : 
+                         getTier(userPoints) === "Gold" ? "Platinum Tier" : "Max Tier"}
+                      </span>
+                      {getTier(userPoints) !== "Platinum" && (
+                        <div className="text-xs text-muted-foreground">
+                          {getTier(userPoints) === "Bronze" ? (500 - userPoints) : 
+                           getTier(userPoints) === "Silver" ? (1000 - userPoints) : 
+                           (2000 - userPoints)} points needed
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-sm font-medium">
+                      {userPoints}/{getTier(userPoints) === "Bronze" ? "500" : 
                                       getTier(userPoints) === "Silver" ? "1000" : 
                                       getTier(userPoints) === "Gold" ? "2000" : "2000+"}
-                      </span>
-                    </div>
-                    <Progress value={getTierProgress(userPoints)} className="h-2" />
+                    </span>
                   </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
-                    <div className="bg-white/80 rounded-lg p-3 shadow-sm">
-                      <div className="flex items-center gap-2 text-sm font-medium mb-1">
-                        <Check className="h-4 w-4 text-green-500" />
-                        Priority Support
-                      </div>
-                      <p className="text-xs text-muted-foreground">24/7 dedicated customer support</p>
+                  <Progress value={getTierProgress(userPoints)} className="h-2" />
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                  <div className="bg-white/80 rounded-lg p-3 shadow-sm">
+                    <div className="flex items-center gap-2 text-sm font-medium mb-1">
+                      <Check className="h-4 w-4 text-green-500" />
+                      Priority Support
                     </div>
-                    <div className="bg-white/80 rounded-lg p-3 shadow-sm">
-                      <div className="flex items-center gap-2 text-sm font-medium mb-1">
-                        <Check className="h-4 w-4 text-green-500" />
-                        Birthday Bonus
-                      </div>
-                      <p className="text-xs text-muted-foreground">Extra 100 points on your birthday</p>
+                    <p className="text-xs text-muted-foreground">24/7 dedicated customer support</p>
+                  </div>
+                  <div className="bg-white/80 rounded-lg p-3 shadow-sm">
+                    <div className="flex items-center gap-2 text-sm font-medium mb-1">
+                      <Check className="h-4 w-4 text-green-500" />
+                      Birthday Bonus
                     </div>
-                    <div className="bg-white/80 rounded-lg p-3 shadow-sm">
-                      <div className="flex items-center gap-2 text-sm font-medium mb-1">
-                        <Check className="h-4 w-4 text-green-500" />
-                        Exclusive Offers
-                      </div>
-                      <p className="text-xs text-muted-foreground">Special deals only for your tier</p>
+                    <p className="text-xs text-muted-foreground">Extra 100 points on your birthday</p>
+                  </div>
+                  <div className="bg-white/80 rounded-lg p-3 shadow-sm">
+                    <div className="flex items-center gap-2 text-sm font-medium mb-1">
+                      <Check className="h-4 w-4 text-green-500" />
+                      Exclusive Offers
                     </div>
+                    <p className="text-xs text-muted-foreground">Special deals only for your tier</p>
                   </div>
                 </div>
               </div>
-            </CardContent>
-            <div className="absolute -bottom-6 -right-6 opacity-10">
-              <Medal className="h-48 w-48 text-primary" />
             </div>
-          </Card>
+          </CardContent>
+          <div className="absolute -bottom-6 -right-6 opacity-10">
+            <Medal className="h-48 w-48 text-primary" />
+          </div>
+        </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Ways to Earn</CardTitle>
-              <CardDescription>Earn points through these activities</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="rounded-lg border p-3">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
-                      <Phone className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-sm">Monthly Bill Payment</h4>
-                      <p className="text-xs text-muted-foreground">Pay your bill on time</p>
-                    </div>
-                  </div>
-                  <div className="text-sm font-semibold text-primary">+50 pts</div>
-                </div>
-              </div>
-              
-              <div className="rounded-lg border p-3">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
-                      <Users className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-sm">Refer a Friend</h4>
-                      <p className="text-xs text-muted-foreground">When they join with your code</p>
-                    </div>
-                  </div>
-                  <div className="text-sm font-semibold text-primary">+200 pts</div>
-                </div>
-              </div>
-              
-              <div className="rounded-lg border p-3">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="h-9 w-9 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
-                      <Smartphone className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium text-sm">Plan Upgrade</h4>
-                      <p className="text-xs text-muted-foreground">Upgrade to a higher plan</p>
-                    </div>
-                  </div>
-                  <div className="text-sm font-semibold text-primary">+100 pts</div>
-                </div>
-              </div>
-              
-              <Button variant="outline" className="w-full">View All Ways to Earn</Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Available rewards */}
         <Card>
           <CardHeader>
-            <CardTitle>Available Rewards</CardTitle>
-            <CardDescription>Redeem your points for these rewards</CardDescription>
+            <CardTitle>Ways to Earn</CardTitle>
+            <CardDescription>Earn points through these activities</CardDescription>
           </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="all" className="w-full">
-              <TabsList className="mb-4 w-full justify-start">
-                <TabsTrigger value="all">All Rewards</TabsTrigger>
-                <TabsTrigger value="bill">Bill Credits</TabsTrigger>
-                <TabsTrigger value="data">Data Rewards</TabsTrigger>
-                <TabsTrigger value="subscription">Subscriptions</TabsTrigger>
-                <TabsTrigger value="device">Device Offers</TabsTrigger>
-              </TabsList>
-              <TabsContent value="all">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {rewards.map(reward => (
-                    <Card key={reward.id} className={`overflow-hidden border ${reward.claimed ? 'bg-muted' : ''}`}>
-                      <div className="p-4">
-                        <div className="flex justify-between items-start">
-                          <div className="flex items-center gap-3">
-                            <div className={`h-10 w-10 rounded-full ${
-                              reward.type === "bill" ? "bg-blue-100 text-blue-600" :
-                              reward.type === "data" ? "bg-green-100 text-green-600" :
-                              reward.type === "subscription" ? "bg-purple-100 text-purple-600" :
-                              "bg-amber-100 text-amber-600"
-                            } flex items-center justify-center`}>
-                              {getRewardIcon(reward.type)}
-                            </div>
-                            <div>
-                              <h3 className="font-medium">{reward.title}</h3>
-                              <p className="text-sm text-muted-foreground">{reward.description}</p>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        <div className="mt-4 flex justify-between items-center">
-                          <div className="flex items-center gap-1 text-sm">
-                            <span className="font-semibold text-primary">{reward.points} points</span>
-                            {reward.expiresIn && (
-                              <span className="text-xs text-muted-foreground">
-                                • Expires in {reward.expiresIn} days
-                              </span>
-                            )}
-                          </div>
-                          
-                          <Button 
-                            variant={reward.claimed ? "outline" : (userPoints >= reward.points ? "default" : "outline")}
-                            size="sm"
-                            disabled={reward.claimed || claimingReward !== null || userPoints < reward.points}
-                            onClick={() => handleClaimReward(reward)}
-                            className={reward.claimed ? "opacity-50" : ""}
-                          >
-                            {claimingReward === reward.id ? (
-                              <span className="flex items-center">
-                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Claiming...
-                              </span>
-                            ) : reward.claimed ? (
-                              <span className="flex items-center">
-                                <Check className="h-4 w-4 mr-1" />
-                                Claimed
-                              </span>
-                            ) : (
-                              "Claim Reward"
-                            )}
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-              <TabsContent value="bill">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {rewards.filter(reward => reward.type === "bill").map(reward => (
-                    <Card key={reward.id} className={`overflow-hidden border ${reward.claimed ? 'bg-muted' : ''}`}>
-                      <div className="p-4">
-                        <div className="flex justify-between items-start">
-                          <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
-                              {getRewardIcon(reward.type)}
-                            </div>
-                            <div>
-                              <h3 className="font-medium">{reward.title}</h3>
-                              <p className="text-sm text-muted-foreground">{reward.description}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="mt-4 flex justify-between items-center">
-                          <div className="flex items-center gap-1 text-sm">
-                            <span className="font-semibold text-primary">{reward.points} points</span>
-                            {reward.expiresIn && (
-                              <span className="text-xs text-muted-foreground">
-                                • Expires in {reward.expiresIn} days
-                              </span>
-                            )}
-                          </div>
-                          <Button 
-                            variant={reward.claimed ? "outline" : (userPoints >= reward.points ? "default" : "outline")}
-                            size="sm"
-                            disabled={reward.claimed || claimingReward !== null || userPoints < reward.points}
-                            onClick={() => handleClaimReward(reward)}
-                            className={reward.claimed ? "opacity-50" : ""}
-                          >
-                            {claimingReward === reward.id ? (
-                              <span className="flex items-center">
-                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Claiming...
-                              </span>
-                            ) : reward.claimed ? (
-                              <span className="flex items-center">
-                                <Check className="h-4 w-4 mr-1" />
-                                Claimed
-                              </span>
-                            ) : (
-                              "Claim Reward"
-                            )}
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-              <TabsContent value="data">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {rewards.filter(reward => reward.type === "data").map(reward => (
-                    <Card key={reward.id} className={`overflow-hidden border ${reward.claimed ? 'bg-muted' : ''}`}>
-                      <div className="p-4">
-                        <div className="flex justify-between items-start">
-                          <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
-                              {getRewardIcon(reward.type)}
-                            </div>
-                            <div>
-                              <h3 className="font-medium">{reward.title}</h3>
-                              <p className="text-sm text-muted-foreground">{reward.description}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="mt-4 flex justify-between items-center">
-                          <div className="flex items-center gap-1 text-sm">
-                            <span className="font-semibold text-primary">{reward.points} points</span>
-                            {reward.expiresIn && (
-                              <span className="text-xs text-muted-foreground">
-                                • Expires in {reward.expiresIn} days
-                              </span>
-                            )}
-                          </div>
-                          <Button 
-                            variant={reward.claimed ? "outline" : (userPoints >= reward.points ? "default" : "outline")}
-                            size="sm"
-                            disabled={reward.claimed || claimingReward !== null || userPoints < reward.points}
-                            onClick={() => handleClaimReward(reward)}
-                            className={reward.claimed ? "opacity-50" : ""}
-                          >
-                            {claimingReward === reward.id ? (
-                              <span className="flex items-center">
-                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Claiming...
-                              </span>
-                            ) : reward.claimed ? (
-                              <span className="flex items-center">
-                                <Check className="h-4 w-4 mr-1" />
-                                Claimed
-                              </span>
-                            ) : (
-                              "Claim Reward"
-                            )}
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-              <TabsContent value="subscription">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {rewards.filter(reward => reward.type === "subscription").map(reward => (
-                    <Card key={reward.id} className={`overflow-hidden border ${reward.claimed ? 'bg-muted' : ''}`}>
-                      <div className="p-4">
-                        <div className="flex justify-between items-start">
-                          <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
-                              {getRewardIcon(reward.type)}
-                            </div>
-                            <div>
-                              <h3 className="font-medium">{reward.title}</h3>
-                              <p className="text-sm text-muted-foreground">{reward.description}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="mt-4 flex justify-between items-center">
-                          <div className="flex items-center gap-1 text-sm">
-                            <span className="font-semibold text-primary">{reward.points} points</span>
-                            {reward.expiresIn && (
-                              <span className="text-xs text-muted-foreground">
-                                • Expires in {reward.expiresIn} days
-                              </span>
-                            )}
-                          </div>
-                          <Button 
-                            variant={reward.claimed ? "outline" : (userPoints >= reward.points ? "default" : "outline")}
-                            size="sm"
-                            disabled={reward.claimed || claimingReward !== null || userPoints < reward.points}
-                            onClick={() => handleClaimReward(reward)}
-                            className={reward.claimed ? "opacity-50" : ""}
-                          >
-                            {claimingReward === reward.id ? (
-                              <span className="flex items-center">
-                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Claiming...
-                              </span>
-                            ) : reward.claimed ? (
-                              <span className="flex items-center">
-                                <Check className="h-4 w-4 mr-1" />
-                                Claimed
-                              </span>
-                            ) : (
-                              "Claim Reward"
-                            )}
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-              <TabsContent value="device">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {rewards.filter(reward => reward.type === "device").map(reward => (
-                    <Card key={reward.id} className={`overflow-hidden border ${reward.claimed ? 'bg-muted' : ''}`}>
-                      <div className="p-4">
-                        <div className="flex justify-between items-start">
-                          <div className="flex items-center gap-3">
-                            <div className="h-10 w-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center">
-                              {getRewardIcon(reward.type)}
-                            </div>
-                            <div>
-                              <h3 className="font-medium">{reward.title}</h3>
-                              <p className="text-sm text-muted-foreground">{reward.description}</p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="mt-4 flex justify-between items-center">
-                          <div className="flex items-center gap-1 text-sm">
-                            <span className="font-semibold text-primary">{reward.points} points</span>
-                            {reward.expiresIn && (
-                              <span className="text-xs text-muted-foreground">
-                                • Expires in {reward.expiresIn} days
-                              </span>
-                            )}
-                          </div>
-                          <Button 
-                            variant={reward.claimed ? "outline" : (userPoints >= reward.points ? "default" : "outline")}
-                            size="sm"
-                            disabled={reward.claimed || claimingReward !== null || userPoints < reward.points}
-                            onClick={() => handleClaimReward(reward)}
-                            className={reward.claimed ? "opacity-50" : ""}
-                          >
-                            {claimingReward === reward.id ? (
-                              <span className="flex items-center">
-                                <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                Claiming...
-                              </span>
-                            ) : reward.claimed ? (
-                              <span className="flex items-center">
-                                <Check className="h-4 w-4 mr-1" />
-                                Claimed
-                              </span>
-                            ) : (
-                              "Claim Reward"
-                            )}
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-          <CardFooter className="pt-0">
-            <Button variant="outline" className="w-full mt-4">Browse More Rewards</Button>
-          </CardFooter>
-        </Card>
-
-        {/* Rewards history */}
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <History className="h-5 w-5" />
-                Rewards History
-              </CardTitle>
-              <CardDescription>Your points activity and reward redemptions</CardDescription>
-            </div>
-            <Button variant="outline" size="sm">
-              Download History
-            </Button>
-          </CardHeader>
-          <CardContent>
-            {history.length === 0 ? (
-              <div className="text-center py-6 text-muted-foreground">
-                No history available yet.
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {history.map((item) => (
-                  <div 
-                    key={item.id} 
-                    className="flex justify-between items-center p-3 rounded-lg border"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={`h-10 w-10 rounded-full ${
-                        item.action === "earned" ? "bg-green-100 text-green-600" : "bg-blue-100 text-blue-600"
-                      } flex items-center justify-center`}>
-                        {item.action === "earned" ? (
-                          <Gift className="h-5 w-5" />
-                        ) : (
-                          <Check className="h-5 w-5" />
-                        )}
-                      </div>
-                      <div>
-                        <h4 className="font-medium text-sm">{item.title}</h4>
-                        <p className="text-xs text-muted-foreground flex items-center gap-1">
-                          <Calendar className="h-3 w-3" />
-                          {formatDate(item.date)}
-                        </p>
-                      </div>
-                    </div>
-                    <div className={`font-semibold ${
-                      item.action === "earned" ? "text-green-600" : "text-blue-600"
-                    }`}>
-                      {item.action === "earned" ? "+" : "-"}{item.points} pts
-                    </div>
+          <CardContent className="space-y-4">
+            <div className="rounded-lg border p-3">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                    <Phone className="h-5 w-5" />
                   </div>
-                ))}
+                  <div>
+                    <h4 className="font-medium text-sm">Monthly Bill Payment</h4>
+                    <p className="text-xs text-muted-foreground">Pay your bill on time</p>
+                  </div>
+                </div>
+                <div className="text-sm font-semibold text-primary">+50 pts</div>
               </div>
-            )}
+            </div>
+            
+            <div className="rounded-lg border p-3">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                    <Users className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-sm">Refer a Friend</h4>
+                    <p className="text-xs text-muted-foreground">When they join with your code</p>
+                  </div>
+                </div>
+                <div className="text-sm font-semibold text-primary">+200 pts</div>
+              </div>
+            </div>
+            
+            <div className="rounded-lg border p-3">
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="h-9 w-9 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
+                    <Smartphone className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-sm">Plan Upgrade</h4>
+                    <p className="text-xs text-muted-foreground">Upgrade to a higher plan</p>
+                  </div>
+                </div>
+                <div className="text-sm font-semibold text-primary">+100 pts</div>
+              </div>
+            </div>
+            
+            <Button variant="outline" className="w-full">View All Ways to Earn</Button>
           </CardContent>
-          <CardFooter className="pt-0">
-            <Button variant="outline" className="w-full mt-4">View Complete History</Button>
-          </CardFooter>
         </Card>
       </div>
-    </DashboardLayout>
+
+      {/* Available rewards */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Available Rewards</CardTitle>
+          <CardDescription>Redeem your points for these rewards</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="all" className="w-full">
+            <TabsList className="mb-4 w-full justify-start">
+              <TabsTrigger value="all">All Rewards</TabsTrigger>
+              <TabsTrigger value="bill">Bill Credits</TabsTrigger>
+              <TabsTrigger value="data">Data Rewards</TabsTrigger>
+              <TabsTrigger value="subscription">Subscriptions</TabsTrigger>
+              <TabsTrigger value="device">Device Offers</TabsTrigger>
+            </TabsList>
+            <TabsContent value="all">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {rewards.map(reward => (
+                  <Card key={reward.id} className={`overflow-hidden border ${reward.claimed ? 'bg-muted' : ''}`}>
+                    <div className="p-4">
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-center gap-3">
+                          <div className={`h-10 w-10 rounded-full ${
+                            reward.type === "bill" ? "bg-blue-100 text-blue-600" :
+                            reward.type === "data" ? "bg-green-100 text-green-600" :
+                            reward.type === "subscription" ? "bg-purple-100 text-purple-600" :
+                            "bg-amber-100 text-amber-600"
+                          } flex items-center justify-center`}>
+                            {getRewardIcon(reward.type)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium">{reward.title}</h3>
+                            <p className="text-sm text-muted-foreground">{reward.description}</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-4 flex justify-between items-center">
+                        <div className="flex items-center gap-1 text-sm">
+                          <span className="font-semibold text-primary">{reward.points} points</span>
+                          {reward.expiresIn && (
+                            <span className="text-xs text-muted-foreground">
+                              • Expires in {reward.expiresIn} days
+                            </span>
+                          )}
+                        </div>
+                        
+                        <Button 
+                          variant={reward.claimed ? "outline" : (userPoints >= reward.points ? "default" : "outline")}
+                          size="sm"
+                          disabled={reward.claimed || claimingReward !== null || userPoints < reward.points}
+                          onClick={() => handleClaimReward(reward)}
+                          className={reward.claimed ? "opacity-50" : ""}
+                        >
+                          {claimingReward === reward.id ? (
+                            <span className="flex items-center">
+                              <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Claiming...
+                            </span>
+                          ) : reward.claimed ? (
+                            <span className="flex items-center">
+                              <Check className="h-4 w-4 mr-1" />
+                              Claimed
+                            </span>
+                          ) : (
+                            "Claim Reward"
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="bill">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {rewards.filter(reward => reward.type === "bill").map(reward => (
+                  <Card key={reward.id} className={`overflow-hidden border ${reward.claimed ? 'bg-muted' : ''}`}>
+                    <div className="p-4">
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                            {getRewardIcon(reward.type)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium">{reward.title}</h3>
+                            <p className="text-sm text-muted-foreground">{reward.description}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-4 flex justify-between items-center">
+                        <div className="flex items-center gap-1 text-sm">
+                          <span className="font-semibold text-primary">{reward.points} points</span>
+                          {reward.expiresIn && (
+                            <span className="text-xs text-muted-foreground">
+                              • Expires in {reward.expiresIn} days
+                            </span>
+                          )}
+                        </div>
+                        <Button 
+                          variant={reward.claimed ? "outline" : (userPoints >= reward.points ? "default" : "outline")}
+                          size="sm"
+                          disabled={reward.claimed || claimingReward !== null || userPoints < reward.points}
+                          onClick={() => handleClaimReward(reward)}
+                          className={reward.claimed ? "opacity-50" : ""}
+                        >
+                          {claimingReward === reward.id ? (
+                            <span className="flex items-center">
+                              <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Claiming...
+                            </span>
+                          ) : reward.claimed ? (
+                            <span className="flex items-center">
+                              <Check className="h-4 w-4 mr-1" />
+                              Claimed
+                            </span>
+                          ) : (
+                            "Claim Reward"
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="data">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {rewards.filter(reward => reward.type === "data").map(reward => (
+                  <Card key={reward.id} className={`overflow-hidden border ${reward.claimed ? 'bg-muted' : ''}`}>
+                    <div className="p-4">
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                            {getRewardIcon(reward.type)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium">{reward.title}</h3>
+                            <p className="text-sm text-muted-foreground">{reward.description}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-4 flex justify-between items-center">
+                        <div className="flex items-center gap-1 text-sm">
+                          <span className="font-semibold text-primary">{reward.points} points</span>
+                          {reward.expiresIn && (
+                            <span className="text-xs text-muted-foreground">
+                              • Expires in {reward.expiresIn} days
+                            </span>
+                          )}
+                        </div>
+                        <Button 
+                          variant={reward.claimed ? "outline" : (userPoints >= reward.points ? "default" : "outline")}
+                          size="sm"
+                          disabled={reward.claimed || claimingReward !== null || userPoints < reward.points}
+                          onClick={() => handleClaimReward(reward)}
+                          className={reward.claimed ? "opacity-50" : ""}
+                        >
+                          {claimingReward === reward.id ? (
+                            <span className="flex items-center">
+                              <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Claiming...
+                            </span>
+                          ) : reward.claimed ? (
+                            <span className="flex items-center">
+                              <Check className="h-4 w-4 mr-1" />
+                              Claimed
+                            </span>
+                          ) : (
+                            "Claim Reward"
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="subscription">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {rewards.filter(reward => reward.type === "subscription").map(reward => (
+                  <Card key={reward.id} className={`overflow-hidden border ${reward.claimed ? 'bg-muted' : ''}`}>
+                    <div className="p-4">
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center">
+                            {getRewardIcon(reward.type)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium">{reward.title}</h3>
+                            <p className="text-sm text-muted-foreground">{reward.description}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-4 flex justify-between items-center">
+                        <div className="flex items-center gap-1 text-sm">
+                          <span className="font-semibold text-primary">{reward.points} points</span>
+                          {reward.expiresIn && (
+                            <span className="text-xs text-muted-foreground">
+                              • Expires in {reward.expiresIn} days
+                            </span>
+                          )}
+                        </div>
+                        <Button 
+                          variant={reward.claimed ? "outline" : (userPoints >= reward.points ? "default" : "outline")}
+                          size="sm"
+                          disabled={reward.claimed || claimingReward !== null || userPoints < reward.points}
+                          onClick={() => handleClaimReward(reward)}
+                          className={reward.claimed ? "opacity-50" : ""}
+                        >
+                          {claimingReward === reward.id ? (
+                            <span className="flex items-center">
+                              <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Claiming...
+                            </span>
+                          ) : reward.claimed ? (
+                            <span className="flex items-center">
+                              <Check className="h-4 w-4 mr-1" />
+                              Claimed
+                            </span>
+                          ) : (
+                            "Claim Reward"
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+            <TabsContent value="device">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {rewards.filter(reward => reward.type === "device").map(reward => (
+                  <Card key={reward.id} className={`overflow-hidden border ${reward.claimed ? 'bg-muted' : ''}`}>
+                    <div className="p-4">
+                      <div className="flex justify-between items-start">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center">
+                            {getRewardIcon(reward.type)}
+                          </div>
+                          <div>
+                            <h3 className="font-medium">{reward.title}</h3>
+                            <p className="text-sm text-muted-foreground">{reward.description}</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-4 flex justify-between items-center">
+                        <div className="flex items-center gap-1 text-sm">
+                          <span className="font-semibold text-primary">{reward.points} points</span>
+                          {reward.expiresIn && (
+                            <span className="text-xs text-muted-foreground">
+                              • Expires in {reward.expiresIn} days
+                            </span>
+                          )}
+                        </div>
+                        <Button 
+                          variant={reward.claimed ? "outline" : (userPoints >= reward.points ? "default" : "outline")}
+                          size="sm"
+                          disabled={reward.claimed || claimingReward !== null || userPoints < reward.points}
+                          onClick={() => handleClaimReward(reward)}
+                          className={reward.claimed ? "opacity-50" : ""}
+                        >
+                          {claimingReward === reward.id ? (
+                            <span className="flex items-center">
+                              <svg className="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                              </svg>
+                              Claiming...
+                            </span>
+                          ) : reward.claimed ? (
+                            <span className="flex items-center">
+                              <Check className="h-4 w-4 mr-1" />
+                              Claimed
+                            </span>
+                          ) : (
+                            "Claim Reward"
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+        <CardFooter className="pt-0">
+          <Button variant="outline" className="w-full mt-4">Browse More Rewards</Button>
+        </CardFooter>
+      </Card>
+
+      {/* Rewards history */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle className="flex items-center gap-2">
+              <History className="h-5 w-5" />
+              Rewards History
+            </CardTitle>
+            <CardDescription>Your points activity and reward redemptions</CardDescription>
+          </div>
+          <Button variant="outline" size="sm">
+            Download History
+          </Button>
+        </CardHeader>
+        <CardContent>
+          {history.length === 0 ? (
+            <div className="text-center py-6 text-muted-foreground">
+              No history available yet.
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {history.map((item) => (
+                <div 
+                  key={item.id} 
+                  className="flex justify-between items-center p-3 rounded-lg border"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`h-10 w-10 rounded-full ${
+                      item.action === "earned" ? "bg-green-100 text-green-600" : "bg-blue-100 text-blue-600"
+                    } flex items-center justify-center`}>
+                      {item.action === "earned" ? (
+                        <Gift className="h-5 w-5" />
+                      ) : (
+                        <Check className="h-5 w-5" />
+                      )}
+                    </div>
+                    <div>
+                      <h4 className="font-medium text-sm">{item.title}</h4>
+                      <p className="text-xs text-muted-foreground flex items-center gap-1">
+                        <Calendar className="h-3 w-3" />
+                        {formatDate(item.date)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className={`font-semibold ${
+                    item.action === "earned" ? "text-green-600" : "text-blue-600"
+                  }`}>
+                    {item.action === "earned" ? "+" : "-"}{item.points} pts
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+        <CardFooter className="pt-0">
+          <Button variant="outline" className="w-full mt-4">View Complete History</Button>
+        </CardFooter>
+      </Card>
+    </div>
   );
 };
 
