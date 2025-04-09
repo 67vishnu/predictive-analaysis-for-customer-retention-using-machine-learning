@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -8,8 +9,10 @@ import { ArrowUpRight, ArrowDownRight, Users, Phone, Zap, Upload, BarChart2, Lin
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend, PieChart, Pie, Cell } from "recharts";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
+import { parseAnalyticsCSV } from "@/utils/csvParser";
 
-const attentionData = [
+// Initial data - will be updated when CSV is uploaded
+const defaultAttentionData = [
   { name: "Jan", value: 65, predicted: 67 },
   { name: "Feb", value: 59, predicted: 62 },
   { name: "Mar", value: 80, predicted: 76 },
@@ -24,7 +27,7 @@ const attentionData = [
   { name: "Dec", value: 75, predicted: 72 },
 ];
 
-const categoryData = [
+const defaultCategoryData = [
   { name: "Network", current: 65, previous: 55 },
   { name: "Price", current: 45, previous: 49 },
   { name: "Customer Service", current: 78, previous: 62 },
@@ -32,18 +35,71 @@ const categoryData = [
   { name: "Billing", current: 82, previous: 75 },
 ];
 
-const churnRiskData = [
+const defaultChurnRiskData = [
   { name: "Low Risk", value: 60, color: "#4ade80" },
   { name: "Medium Risk", value: 25, color: "#facc15" },
   { name: "High Risk", value: 15, color: "#ef4444" },
 ];
 
-const healthData = {
+const defaultHealthData = {
   loyalty: { score: 87, label: "Loyalty Score", color: "blue" },
   churn: { score: 13, label: "Churn Risk", color: "red" },
   satisfaction: { score: 78, label: "Satisfaction", color: "green" },
   payments: { score: 96, label: "On-Time Payments", color: "purple" }
 };
+
+// Create a data context to share state between Analytics and Dashboard
+// In a real app, this would be in a separate context file
+export const useAnalyticsData = () => {
+  // Get data from localStorage if available
+  const getStoredData = (key: string, defaultData: any) => {
+    const stored = localStorage.getItem(key);
+    return stored ? JSON.parse(stored) : defaultData;
+  };
+
+  const [attentionData, setAttentionData] = useState(() => 
+    getStoredData('attentionData', defaultAttentionData)
+  );
+  
+  const [categoryData, setCategoryData] = useState(() => 
+    getStoredData('categoryData', defaultCategoryData)
+  );
+  
+  const [churnRiskData, setChurnRiskData] = useState(() => 
+    getStoredData('churnRiskData', defaultChurnRiskData)
+  );
+  
+  const [healthData, setHealthData] = useState(() => 
+    getStoredData('healthData', defaultHealthData)
+  );
+
+  // Save to localStorage when data changes
+  useEffect(() => {
+    localStorage.setItem('attentionData', JSON.stringify(attentionData));
+  }, [attentionData]);
+  
+  useEffect(() => {
+    localStorage.setItem('categoryData', JSON.stringify(categoryData));
+  }, [categoryData]);
+  
+  useEffect(() => {
+    localStorage.setItem('churnRiskData', JSON.stringify(churnRiskData));
+  }, [churnRiskData]);
+  
+  useEffect(() => {
+    localStorage.setItem('healthData', JSON.stringify(healthData));
+  }, [healthData]);
+
+  return {
+    attentionData, setAttentionData,
+    categoryData, setCategoryData,
+    churnRiskData, setChurnRiskData,
+    healthData, setHealthData
+  };
+};
+
+// Create a singleton instance of the data
+let globalAnalyticsData: ReturnType<typeof useAnalyticsData> | null = null;
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -51,6 +107,18 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [chartView, setChartView] = useState<"line" | "bar">("line");
   const [isUploading, setIsUploading] = useState(false);
+  
+  // Initialize analytics data or get from global
+  if (!globalAnalyticsData) {
+    globalAnalyticsData = useAnalyticsData();
+  }
+  
+  const { 
+    attentionData, setAttentionData,
+    categoryData, setCategoryData,
+    churnRiskData, setChurnRiskData,
+    healthData, setHealthData
+  } = globalAnalyticsData;
 
   if (!user) return null;
 
@@ -59,13 +127,82 @@ const Dashboard = () => {
     
     setIsUploading(true);
     
-    setTimeout(() => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = (event) => {
+      try {
+        const csvContent = event?.target?.result as string;
+        const parsedData = parseAnalyticsCSV(csvContent);
+        
+        // Update dashboard data with parsed CSV data
+        if (parsedData.monthlyData && parsedData.monthlyData.length > 0) {
+          setAttentionData(parsedData.monthlyData);
+        }
+        
+        if (parsedData.categoryData && parsedData.categoryData.length > 0) {
+          setCategoryData(parsedData.categoryData);
+        }
+        
+        if (parsedData.churnRiskData && parsedData.churnRiskData.length > 0) {
+          setChurnRiskData(parsedData.churnRiskData);
+        }
+        
+        // Update health metrics based on the new data
+        if (parsedData.monthlyData || parsedData.categoryData || parsedData.churnRiskData) {
+          // Calculate new health metrics
+          const newHealthData = {...healthData};
+          
+          // Example: Update loyalty score based on monthly data if available
+          if (parsedData.monthlyData) {
+            const recentMonths = parsedData.monthlyData.slice(-3);
+            const avgScore = recentMonths.reduce((acc, item) => acc + item.value, 0) / recentMonths.length;
+            newHealthData.loyalty.score = Math.min(Math.round(avgScore + 10), 100);
+            newHealthData.satisfaction.score = Math.min(Math.round(avgScore), 100);
+          }
+          
+          // Update churn risk based on churn risk data if available
+          if (parsedData.churnRiskData) {
+            const highRisk = parsedData.churnRiskData.find(item => 
+              item.name.toLowerCase().includes('high')
+            );
+            if (highRisk) {
+              newHealthData.churn.score = Math.min(Math.round(highRisk.value), 100);
+            }
+          }
+          
+          setHealthData(newHealthData);
+        }
+        
+        setIsUploading(false);
+        
+        toast({
+          title: "Data uploaded successfully",
+          description: "Your analytics data has been updated with the new file.",
+        });
+      } catch (error) {
+        console.error("Error processing CSV file:", error);
+        setIsUploading(false);
+        
+        toast({
+          title: "Error processing CSV",
+          description: "There was an error processing your file. Please check the format.",
+          variant: "destructive"
+        });
+      }
+    };
+    
+    reader.onerror = () => {
       setIsUploading(false);
+      
       toast({
-        title: "Data uploaded successfully",
-        description: "Your analytics data has been updated with the new file.",
+        title: "File read error",
+        description: "Failed to read the uploaded file. Please try again.",
+        variant: "destructive"
       });
-    }, 2000);
+    };
+    
+    reader.readAsText(file);
   };
 
   const handlePayNow = () => {
@@ -99,6 +236,21 @@ const Dashboard = () => {
     });
   };
 
+  // Calculate the current attention score
+  const calculateCurrentAttentionScore = () => {
+    if (!attentionData.length) return { score: 0, change: 0 };
+    
+    const currentMonth = attentionData[attentionData.length - 1];
+    const previousMonth = attentionData[attentionData.length - 2] || { value: 0 };
+    const score = currentMonth.value;
+    const change = score - previousMonth.value;
+    
+    return { score, change };
+  };
+
+  // Current metrics
+  const currentAttention = calculateCurrentAttentionScore();
+  
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
