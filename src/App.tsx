@@ -27,7 +27,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Navigate to="/login" replace />} />
             <Route path="/login" element={<Login />} />
-            {/* Use DashboardLayout as a parent route with child routes nested inside */}
+            
+            {/* Dashboard Layout with nested routes */}
             <Route path="/" element={<DashboardLayout />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/analytics" element={<Analytics />} />
@@ -36,6 +37,7 @@ const App = () => (
               <Route path="/rewards" element={<Rewards />} />
               <Route path="/settings" element={<Settings />} />
             </Route>
+            
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
