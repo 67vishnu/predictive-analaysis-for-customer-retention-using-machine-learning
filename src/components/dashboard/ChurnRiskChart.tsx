@@ -1,7 +1,6 @@
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
-import { Tooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip } from "recharts";
 
 interface ChurnRiskChartProps {
   churnRiskData: {
@@ -36,7 +35,7 @@ export function ChurnRiskChart({ churnRiskData }: ChurnRiskChartProps) {
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip formatter={(value) => `${value}%`} />
+              <RechartsTooltip formatter={(value) => `${value}%`} />
             </PieChart>
           </ResponsiveContainer>
         </div>
