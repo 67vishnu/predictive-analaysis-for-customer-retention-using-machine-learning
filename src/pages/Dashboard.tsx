@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,10 +6,10 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/context/AuthContext";
 import { ArrowUpRight, ArrowDownRight, Users, Phone, Zap, Upload, BarChart2, LineChart, FileUp, Eye } from "lucide-react";
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend, PieChart, Pie, Cell } from "recharts";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, BarChart, Bar, Legend, PieChart, Pie, Cell } from "recharts";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
-import { parseAnalyticsCSV } from "@/utils/csvParser";
+import { parseAnalyticsCSV, AnalyticsDataPoint } from "@/utils/csvParser";
 import DownloadSample from "@/components/DownloadSample";
 
 // Interface for health data metrics
@@ -25,8 +26,13 @@ interface HealthData {
   payments: HealthMetric;
 }
 
+// Type for chart data with required predicted field
+interface AttentionDataPoint extends AnalyticsDataPoint {
+  predicted: number;
+}
+
 // Initial data - will be updated when CSV is uploaded
-const defaultAttentionData = [
+const defaultAttentionData: AttentionDataPoint[] = [
   { name: "Jan", value: 65, predicted: 67 },
   { name: "Feb", value: 59, predicted: 62 },
   { name: "Mar", value: 80, predicted: 76 },
@@ -70,7 +76,7 @@ export const useAnalyticsData = () => {
     return stored ? JSON.parse(stored) : defaultData;
   };
 
-  const [attentionData, setAttentionData] = useState(() => 
+  const [attentionData, setAttentionData] = useState<AttentionDataPoint[]>(() => 
     getStoredData('attentionData', defaultAttentionData)
   );
   
@@ -112,7 +118,6 @@ export const useAnalyticsData = () => {
 };
 
 // Fix the hook implementation pattern to avoid conditional rendering issues
-// Instead of using a global variable, we'll use the hook directly and properly
 const Dashboard = () => {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -172,7 +177,13 @@ const Dashboard = () => {
         
         // Update dashboard data with parsed CSV data
         if (parsedData.monthlyData && parsedData.monthlyData.length > 0) {
-          setAttentionData(parsedData.monthlyData);
+          // Ensure all data points have a predicted value
+          const processedData = parsedData.monthlyData.map(point => ({
+            ...point,
+            predicted: point.predicted || (point.value * 0.98) // Default prediction if none provided
+          })) as AttentionDataPoint[];
+          
+          setAttentionData(processedData);
         }
         
         if (parsedData.categoryData && parsedData.categoryData.length > 0) {
