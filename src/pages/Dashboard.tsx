@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,21 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import { parseAnalyticsCSV } from "@/utils/csvParser";
+import DownloadSample from "@/components/DownloadSample";
+
+// Interface for health data metrics
+interface HealthMetric {
+  score: number;
+  label: string;
+  color: string;
+}
+
+interface HealthData {
+  loyalty: HealthMetric;
+  churn: HealthMetric;
+  satisfaction: HealthMetric;
+  payments: HealthMetric;
+}
 
 // Initial data - will be updated when CSV is uploaded
 const defaultAttentionData = [
@@ -41,18 +55,17 @@ const defaultChurnRiskData = [
   { name: "High Risk", value: 15, color: "#ef4444" },
 ];
 
-const defaultHealthData = {
+const defaultHealthData: HealthData = {
   loyalty: { score: 87, label: "Loyalty Score", color: "blue" },
   churn: { score: 13, label: "Churn Risk", color: "red" },
   satisfaction: { score: 78, label: "Satisfaction", color: "green" },
   payments: { score: 96, label: "On-Time Payments", color: "purple" }
 };
 
-// Create a data context to share state between Analytics and Dashboard
-// In a real app, this would be in a separate context file
+// Create a custom hook for analytics data
 export const useAnalyticsData = () => {
   // Get data from localStorage if available
-  const getStoredData = (key: string, defaultData: any) => {
+  const getStoredData = <T,>(key: string, defaultData: T): T => {
     const stored = localStorage.getItem(key);
     return stored ? JSON.parse(stored) : defaultData;
   };
@@ -69,7 +82,7 @@ export const useAnalyticsData = () => {
     getStoredData('churnRiskData', defaultChurnRiskData)
   );
   
-  const [healthData, setHealthData] = useState(() => 
+  const [healthData, setHealthData] = useState<HealthData>(() => 
     getStoredData('healthData', defaultHealthData)
   );
 
@@ -98,9 +111,8 @@ export const useAnalyticsData = () => {
   };
 };
 
-// Create a singleton instance of the data
-let globalAnalyticsData: ReturnType<typeof useAnalyticsData> | null = null;
-
+// Fix the hook implementation pattern to avoid conditional rendering issues
+// Instead of using a global variable, we'll use the hook directly and properly
 const Dashboard = () => {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -108,19 +120,42 @@ const Dashboard = () => {
   const [chartView, setChartView] = useState<"line" | "bar">("line");
   const [isUploading, setIsUploading] = useState(false);
   
-  // Initialize analytics data or get from global
-  if (!globalAnalyticsData) {
-    globalAnalyticsData = useAnalyticsData();
-  }
+  // Always call hooks at the top level, not conditionally
+  const analyticsData = useAnalyticsData();
   
   const { 
     attentionData, setAttentionData,
     categoryData, setCategoryData,
     churnRiskData, setChurnRiskData,
     healthData, setHealthData
-  } = globalAnalyticsData;
+  } = analyticsData;
 
-  if (!user) return null;
+  // Calculate the current attention score
+  const calculateCurrentAttentionScore = () => {
+    if (!attentionData.length) return { score: 0, change: 0 };
+    
+    const currentMonth = attentionData[attentionData.length - 1];
+    const previousMonth = attentionData[attentionData.length - 2] || { value: 0 };
+    const score = currentMonth.value;
+    const change = score - previousMonth.value;
+    
+    return { score, change };
+  };
+
+  // Current metrics
+  const currentAttention = calculateCurrentAttentionScore();
+
+  if (!user) {
+    // Instead of returning null (which would skip hooks), return a loading state
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-500">Loading user data...</p>
+        </div>
+      </div>
+    );
+  }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files?.length) return;
@@ -235,21 +270,6 @@ const Dashboard = () => {
       description: "Showing you all available telecom plans.",
     });
   };
-
-  // Calculate the current attention score
-  const calculateCurrentAttentionScore = () => {
-    if (!attentionData.length) return { score: 0, change: 0 };
-    
-    const currentMonth = attentionData[attentionData.length - 1];
-    const previousMonth = attentionData[attentionData.length - 2] || { value: 0 };
-    const score = currentMonth.value;
-    const change = score - previousMonth.value;
-    
-    return { score, change };
-  };
-
-  // Current metrics
-  const currentAttention = calculateCurrentAttentionScore();
   
   return (
     <div className="space-y-6">
@@ -295,6 +315,7 @@ const Dashboard = () => {
               disabled={isUploading}
             />
           </Button>
+          <DownloadSample />
         </div>
       </div>
 
