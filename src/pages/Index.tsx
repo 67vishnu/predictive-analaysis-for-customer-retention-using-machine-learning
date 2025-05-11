@@ -7,13 +7,12 @@ const Index = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  // Always call useEffect, but conditionally navigate inside
   useEffect(() => {
     const path = isAuthenticated ? "/dashboard" : "/login";
     navigate(path);
   }, [isAuthenticated, navigate]);
 
-  // Always return a component, never conditionally return
+  // Return a loading state while redirecting
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
       <div className="text-center">
